@@ -1,0 +1,159 @@
+@charset "UTF-8";
+
+/* 전체 공통 폰트와 기본 여백 제거 */
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f8f9fa;
+}
+
+/* 상품 카드 */
+.product-card {
+  border: 1px solid #ddd;
+  border-radius: 16px;
+  padding: 16px;
+  text-align: center;
+  background-color: #fff;
+  position: relative;
+  transition: all 0.3s ease;
+}
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* 상품 이미지 */
+.product-card img {
+  max-width: 120px;
+  max-height: 120px;
+  object-fit: contain;
+  margin: 0 auto 12px;
+  display: block;
+}
+
+/* 신상품, 핫이슈 뱃지 */
+.badge-new {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #69d54c;
+  color: white;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 50px;
+  z-index: 10;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* Swiper 공통 슬라이더 스타일 */
+.swiper {
+  padding-bottom: 40px;
+}
+.swiper-slide {
+  padding: 8px;
+}
+
+/* 🔽 공통 wrapper - 슬라이드 양옆 버튼을 위한 공간 확보 */
+.hotSwiper-wrapper,
+.newSwiper-wrapper,
+.eventSwiper-wrapper {
+  position: relative;
+  padding: 0 60px; /* 좌우 버튼 영역 확보 */
+  overflow: visible;
+}
+
+/* 🔽 공통 버튼 스타일 */
+.hot-prev, .hot-next,
+.new-prev, .new-next,
+.event-prev, .event-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  color: #007bff;
+  z-index: 10;
+  cursor: pointer;
+}
+
+/* 🔥 핫이슈 Swiper 버튼 위치 */
+.hot-prev { left: -20px; }
+.hot-next { right: -20px; }
+
+/* 🆕 신상품 Swiper 버튼 위치 */
+.new-prev { left: -20px; }
+.new-next { right: -20px; }
+
+/* 🎉 이벤트 Swiper 버튼 위치 */
+.event-prev { left: -20px; }
+.event-next { right: -20px; }
+
+/* 검색창 */
+.form-control {
+  box-shadow: none !important;
+  font-size: 15px;
+}
+.btn-outline-secondary {
+  border-color: #ced4da;
+  color: #495057;
+  background-color: white;
+}
+.btn-outline-secondary:hover {
+  background-color: #e9ecef;
+  border-color: #adb5bd;
+}
+
+/* 이벤트 배너 */
+.event-banner {
+  background-color: #fff4e6;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  border-radius: 16px;
+}
+.event-banner .text-box {
+  max-width: 55%;
+}
+.event-banner .image-box img {
+  max-height: 140px;
+  object-fit: contain;
+}
+
+/* 헤더, 푸터 */
+header, footer {
+  background-color: #f8f9fa;
+  color: #6c757d;
+}
+footer {
+  font-size: 14px;
+  padding-top: 32px;
+  padding-bottom: 32px;
+  border-top: 1px solid #dee2e6;
+}
+
+/* 구독 폼 */
+footer input[type="email"] {
+  font-size: 14px;
+  padding: 6px 10px;
+}
+footer button {
+  font-size: 14px;
+  padding: 6px 12px;
+}
+
+/* 반응형 보완 */
+@media (max-width: 576px) {
+  .product-card img {
+    max-width: 100px;
+    max-height: 100px;
+  }
+
+  .badge-new {
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+}

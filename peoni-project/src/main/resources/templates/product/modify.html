@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>상품 수정</title>
+</head>
+<body>
+
+<!-- 기본 레이아웃의 content 영역에 삽입 -->
+<th:block th:replace="~{layout/basic :: setContent(~{::content})}">
+  <th:block th:fragment="content">
+
+    <div class="container my-4">
+      <h2>상품 수정</h2>
+
+      <form th:action="@{/product/modify}" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="productId" th:value="${product.productId}" />
+        <input type="hidden" name="mno" th:value="${product.mno}" />
+ 
+ 		<!-- 공개 여부 -->
+ 		<div class="mb-3">
+ 			<label for="isVisible">공개 여부</label>
+ 			<select name="isVisible" class="form-select" required>
+ 			<option value="Y" th:selected="${product.isVisible == 'Y'}">공개</option>
+ 			<option value="N" th:selected="${product.isVisible == 'N'}">비공개</option>
+ 			</select>
+ 		</div>
+ 		
+        <!-- 상품명 -->
+        <div class="mb-3">
+          <label>상품명</label>
+          <input type="text" name="productName" th:value="${product.productName}" class="form-control" required>
+        </div>
+
+        <!-- 가격 -->
+        <div class="mb-3">
+          <label>가격</label>
+          <input type="number" name="price" th:value="${product.price}" class="form-control" required>
+        </div>
+
+        <!-- 카테고리 -->
+        <div class="mb-3">
+          <label>카테고리</label>
+          <select name="categoryId" class="form-select">
+            <option th:each="category : ${categoryList}"
+                    th:value="${category.categoryId}"
+                    th:text="${category.categoryName}"
+                    th:selected="${category.categoryId == product.categoryId}">
+            </option>
+          </select>
+        </div>
+
+        <!-- 편의점 -->
+        <div class="mb-3">
+          <label>편의점</label>
+          <select name="storeId" class="form-select">
+            <option th:each="store : ${storeList}"
+                    th:value="${store.storeId}"
+                    th:text="${store.storeName}"
+                    th:selected="${store.storeId == product.storeId}">
+            </option>
+          </select>
+        </div>
+
+        <!-- 상품 설명 -->
+        <div class="mb-3">
+          <label>상품 설명</label>
+          <textarea name="content" class="form-control" rows="3" th:text="${product.content}"></textarea>
+        </div>
+
+        <!-- 이미지 업로드 -->
+        <div class="mb-3">
+          <label for="image" class="form-label">상품 이미지</label>
+          <input type="file" class="form-control" id="image" name="imageFile">
+          <img id="preview" th:if="${product.image != null and !#strings.isEmpty(product.image)}"
+               th:src="@{/upload/{img}(img=${product.image})}" alt="현재 이미지"
+               style="max-width: 200px;" class="mt-2"/>
+        </div>
+
+        <!-- 버튼 -->
+        <button type="submit" class="btn btn-primary">상품 수정</button>
+        <button type="button" class="btn btn-secondary" th:onclick="|location.href='@{/product/list}'|">목록으로</button>
+      </form>
+    </div>
+
+  </th:block>
+</th:block>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+  $('#image').on('change', function(event) {
+    const [file] = event.target.files;
+    if (file) {
+      $('#preview').attr('src', URL.createObjectURL(file)).show();
+    }
+  });
+</script>
+
+</body>
+</html>

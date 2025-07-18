@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko"
+      th:replace="~{layout/basic :: setContent(~{::content})}">
+<head></head>
+<body>
+<div th:fragment="content">
+
+  <!-- 검색 영역 -->
+  <div class="container py-3">
+    <form class="d-flex justify-content-center" method="get" th:action="@{/product/list}">
+      <input type="hidden" name="typeArr" value="P">
+      <input type="hidden" name="typeArr" value="C">
+      <div class="input-group" style="max-width: 600px; width: 100%;">
+        <input type="search" name="keyword" class="form-control rounded-pill border-secondary"
+               placeholder="상품명으로 검색">
+        <button class="btn btn-outline-secondary rounded-pill ms-2" type="submit">검색</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- 🎉 이벤트 슬라이드 -->
+  <section class="py-5 bg-light">
+  <div class="container">
+    <div class="text-center mb-4">
+      <h2 class="fw-bold">이벤트</h2>
+    </div>
+
+    <!-- 바깥쪽 버튼 배치를 위한 래퍼 -->
+    <div class="position-relative eventSwiper-wrapper">
+      <div class="swiper-button-prev event-prev"></div>
+
+      <div class="swiper eventSwiper">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide">
+            <img th:src="@{/images/event1.jpg}" class="w-100 rounded-4" alt="이벤트1" />
+          </div>
+          <div class="swiper-slide">
+            <img th:src="@{/images/event2.jpg}" class="w-100 rounded-4" alt="이벤트2" />
+          </div>
+          <div class="swiper-slide">
+            <img th:src="@{/images/event3.jpg}" class="w-100 rounded-4" alt="이벤트3" />
+          </div>
+        </div>
+        <div class="swiper-pagination event-pagination"></div>
+      </div>
+
+      <div class="swiper-button-next event-next"></div>
+    </div>
+  </div>
+</section>
+
+  <!-- 🔥 핫이슈 -->
+  <section class="py-5" th:if="${hotProducts != null}">
+  <div class="container">
+    <div class="position-relative text-center mb-4">
+      <h2 class="fw-bold">핫이슈</h2>
+      <a th:href="@{/product/list}" class="position-absolute end-0 top-50 translate-middle-y text-decoration-none text-muted small me-1">
+        모두보기 &gt;
+      </a>
+    </div>
+
+    <!-- 바깥쪽 버튼 배치를 위한 래퍼 -->
+    <div class="position-relative hotSwiper-wrapper">
+      <!-- 왼쪽 버튼 바깥으로 -->
+      <div class="swiper-button-prev hot-prev"></div>
+
+      <!-- Swiper 본체 -->
+      <div class="swiper hotSwiper">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide" th:each="product : ${hotProducts}">
+            <div class="product-card position-relative">
+              <a th:href="@{/product/read(productId=${product.productId})}" class="text-decoration-none text-dark">
+                <img th:src="${product.image != null} ? '/upload/' + ${product.image} : '/images/default.png'"
+                     th:alt="${product.productName}" class="product-image" />
+                <div class="badge-new">Hot</div>
+                <p class="fw-semibold" th:text="${product.productName}">상품명</p>
+                <p class="text-primary fw-bold" th:text="${product.price + '원'}">가격</p>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="swiper-pagination hot-pagination"></div>
+      </div>
+
+      <!-- 오른쪽 버튼 바깥으로 -->
+      <div class="swiper-button-next hot-next"></div>
+    </div>
+  </div>
+</section>
+
+  <!-- 🆕 신상품 -->
+  <section class="py-5" th:if="${newProducts != null}">
+  <div class="container">
+    <div class="position-relative text-center mb-4">
+      <h2 class="fw-bold">신상품</h2>
+      <a th:href="@{/product/list}" class="position-absolute end-0 top-50 translate-middle-y text-decoration-none text-muted small me-1">
+        모두보기 &gt;
+      </a>
+    </div>
+
+    <!-- 바깥쪽 버튼 배치를 위한 래퍼 -->
+    <div class="position-relative newSwiper-wrapper">
+      <!-- 왼쪽 버튼 -->
+      <div class="swiper-button-prev new-prev"></div>
+
+      <!-- Swiper 본체 -->
+      <div class="swiper newSwiper">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide" th:each="product : ${newProducts}">
+            <div class="product-card position-relative">
+              <a th:href="@{/product/read(productId=${product.productId})}" class="text-decoration-none text-dark">
+                <img th:src="${product.image != null} ? '/upload/' + ${product.image} : '/images/default.png'"
+                     th:alt="${product.productName}" class="product-image" />
+                <div class="badge-new">New</div>
+                <p class="fw-semibold" th:text="${product.productName}">상품명</p>
+                <p class="text-primary fw-bold" th:text="${product.price + '원'}">가격</p>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="swiper-pagination new-pagination"></div>
+      </div>
+
+      <!-- 오른쪽 버튼 -->
+      <div class="swiper-button-next new-next"></div>
+    </div>
+  </div>
+</section>
+
+</div>
+</body>
+</html>

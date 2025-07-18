@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko"
+      th:replace="~{layout/basic :: setContent(~{::content})}">
+<head></head>
+<body>
+  <div th:fragment="content">
+    <div class="login-wrapper">
+      <h1>로그인</h1>
+      <form th:action="@{/member/loginPost}" method="post">
+        <label for="userId">아이디</label>
+        <input id="userId" name="userId" type="text" class="input-field" placeholder="아이디를 입력하세요" required />
+
+        <label for="userPw">비밀번호</label>
+        <input id="userPw" name="userPw" type="password" class="input-field" placeholder="비밀번호를 입력하세요" required />
+
+        <button type="submit">로그인</button>
+      </form>
+
+      <div class="extra-links">
+        <a href="javascript:void(0);" onclick="openModal('findIdModal')">아이디 찾기</a>
+        <a href="javascript:void(0);" onclick="openModal('findPwModal')">비밀번호 찾기</a>
+      </div>
+
+      <form th:action="@{/member/register}" method="get">
+        <button type="submit" class="register-btn">회원가입</button>
+      </form>
+    </div>
+
+    <!-- 아이디 찾기 모달 -->
+    <div class="modal" id="findIdModal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal('findIdModal')">&times;</span>
+        <h2>아이디 찾기</h2>
+        <form id="findIdForm">
+          <label>이름</label>
+          <input type="text" name="username" class="input-field" required />
+          <label>이메일</label>
+          <input type="email" name="email" class="input-field" required />
+          <button type="submit">아이디 찾기</button>
+        </form>
+        <div id="findIdResult"></div>
+      </div>
+    </div>
+
+    <!-- 비밀번호 찾기 모달 -->
+    <div class="modal" id="findPwModal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal('findPwModal')">&times;</span>
+        <h2>비밀번호 찾기</h2>
+        <form id="findPwForm">
+          <label>아이디</label>
+          <input type="text" name="userid" class="input-field" required />
+          <label>이메일</label>
+          <input type="email" name="email" class="input-field" required />
+          <button type="submit">비밀번호 찾기</button>
+        </form>
+        <div id="findPwResult"></div>
+      </div>
+    </div>
+
+    <!-- 스타일 및 스크립트 -->
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
+
+
+      .login-wrapper {
+        background: white;
+        border-radius: 12px;
+        width: 360px;
+        padding: 2.5rem 3rem;
+        box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+        margin: 80px auto;
+        text-align: center;
+      }
+
+      h1 {
+        margin-bottom: 2rem;
+        color: #333;
+        font-weight: 600;
+        font-size: 2rem;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 0.4rem;
+        color: #555;
+        font-weight: 600;
+        text-align: left;
+      }
+
+      .input-field {
+        width: 100%;
+        padding: 0.6rem 0.8rem;
+        margin-bottom: 1.3rem;
+        border: 2px solid #ddd;
+        border-radius: 6px;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+      }
+
+      .input-field:focus {
+        border-color: #6a11cb;
+        outline: none;
+      }
+
+      button {
+        width: 100%;
+        background-color: #6a11cb;
+        color: white;
+        border: none;
+        padding: 0.75rem 0;
+        font-weight: 600;
+        font-size: 1.15rem;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      button:hover {
+        background-color: #4b07a0;
+      }
+
+      .extra-links {
+        margin-top: 1.3rem;
+        font-size: 0.9rem;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .extra-links a {
+        color: #6a11cb;
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      .extra-links a:hover {
+        color: #4b07a0;
+        text-decoration: underline;
+      }
+
+      .register-btn {
+        margin-top: 2rem;
+        background-color: #eee;
+        color: #333;
+      }
+
+      .register-btn:hover {
+        background-color: #ddd;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 999;
+        left: 0; top: 0;
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.4);
+        justify-content: center;
+        align-items: center;
+      }
+
+      .modal-content {
+        background: #fff;
+        padding: 2rem;
+        border-radius: 8px;
+        width: 90%;
+        max-width: 400px;
+        position: relative;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        max-height: 80vh;
+        overflow-y: auto;
+      }
+
+      .close {
+        position: absolute;
+        top: 12px;
+        right: 16px;
+        font-size: 1.5rem;
+        cursor: pointer;
+      }
+    </style>
+
+    <script>
+      function openModal(id) {
+        document.getElementById(id).style.display = "flex";
+      }
+
+      function closeModal(id) {
+        document.getElementById(id).style.display = "none";
+      }
+
+      document.getElementById("findIdForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+        const data = {
+          username: this.username.value,
+          email: this.email.value
+        };
+        fetch("/member/findIdPost", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        }).then(res => res.text()).then(result => {
+          const resultBox = document.getElementById("findIdResult");
+          resultBox.innerText = result !== "fail" ? "아이디: " + result : "일치하는 정보가 없습니다.";
+        });
+      });
+
+      document.getElementById("findPwForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+        const data = {
+          userid: this.userid.value.trim(),
+          email: this.email.value.trim()
+        };
+        fetch("/member/findPwPost", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        }).then(res => res.text()).then(result => {
+          const resultBox = document.getElementById("findPwResult");
+          resultBox.innerText = result === "fail"
+            ? "일치하는 정보가 없습니다."
+            : "비밀번호: " + result;
+        });
+      });
+    </script>
+  </div>
+</body>
+</html>

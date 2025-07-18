@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>상품 등록</title>
+</head>
+<body>
+
+<th:block th:replace="~{layout/basic :: setContent(~{::content})}">
+  <th:block th:fragment="content">
+
+    <div class="container my-4">
+      <h2>상품 등록</h2>
+
+      <form th:action="@{/product/register}" method="post" enctype="multipart/form-data">
+
+        <!-- 상품명 -->
+        <div class="mb-3">
+          <label>상품명</label>
+          <input type="text" name="productName" class="form-control" required>
+        </div>
+
+        <!-- 가격 -->
+        <div class="mb-3">
+          <label>가격</label>
+          <input type="number" name="price" class="form-control" required>
+        </div>
+
+        <!-- 카테고리 -->
+        <div class="mb-3">
+          <label>카테고리</label>
+          <select name="categoryId" class="form-select">
+            <option th:each="category : ${categoryList}"
+                    th:value="${category.categoryId}"
+                    th:text="${category.categoryName}">
+            </option>
+          </select>
+        </div>
+
+        <!-- 편의점 -->
+        <div class="mb-3">
+          <label>편의점</label>
+          <select name="storeId" class="form-select">
+            <option th:each="store : ${storeList}"
+                    th:value="${store.storeId}"
+                    th:text="${store.storeName}">
+            </option>
+          </select>
+        </div>
+
+        <!-- 상품 설명 -->
+        <div class="mb-3">
+          <label>상품 설명</label>
+          <textarea name="content" class="form-control" rows="3"></textarea>
+        </div>
+
+        <!-- isVisible -->
+        <div class="mb-3">
+          <label>공개 여부</label>
+          <select name="isVisible" class="form-select">
+            <option value="Y" selected>공개</option>
+            <option value="N">비공개</option>
+          </select>
+        </div>
+
+        <!-- eventFlag -->
+        <div class="mb-3">
+          <label>이벤트 상품</label>
+          <select name="eventflag" class="form-select">
+            <option value="Y">예</option>
+            <option value="N" selected>아니오</option>
+          </select>
+        </div>
+
+        <!-- 이미지 업로드 -->
+        <div class="mb-3">
+          <label for="image" class="form-label">상품 이미지</label>
+          <input type="file" class="form-control" id="image" name="imageFile">
+          <img id="preview" src="#" alt="미리보기" style="max-width: 200px; display: none;" class="mt-2"/>
+        </div>
+
+        <!-- 버튼 -->
+        <button type="submit" class="btn btn-primary">상품 등록</button>
+        <button type="button" class="btn btn-secondary" th:onclick="|location.href='@{/product/list}'|">목록으로</button>
+
+      </form>
+    </div>
+
+  </th:block>
+</th:block>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+  $('#image').on('change', function(event) {
+    const [file] = event.target.files;
+    if (file) {
+      $('#preview').attr('src', URL.createObjectURL(file)).show();
+    }
+  });
+</script>
+
+</body>
+</html>
