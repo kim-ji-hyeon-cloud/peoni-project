@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.peoni.project.entity.board.BoardEntity;
 
-public interface IBoardRepository extends JpaRepository<BoardEntity, Long>{
+public interface IBoardRepository extends JpaRepository<BoardEntity, Long>, IBoardSearchRepository{
 
 	
 	@Query("SELECT b, bi, COUNT(br) "

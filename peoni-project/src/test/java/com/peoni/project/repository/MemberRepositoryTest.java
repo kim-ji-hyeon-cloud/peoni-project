@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Optional;
+import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,17 +22,30 @@ class MemberRepositoryTest {
 	@Autowired
 	private IMemberRepository memberRepository;
 	
-	@Test
-	void testInsertMember() {
-		MemberEntity member = MemberEntity.builder()
-				.userId("user1")
-				.userPw("1234")
-				.userName("홍길동")
-				.email("user1@naver.com")
-				.build();
-		
-		memberRepository.save(member);
-	}
+//	@Test
+//	void testInsertMembers() {
+//		IntStream.rangeClosed(1, 100).forEach(i -> {
+//			MemberEntity member = MemberEntity.builder()
+//											.userId("user" + i)
+//											.userPw("1111")
+//											.userName("reviewer" + i)
+//											.email("user" + i + "@naver.com")
+//											.build();
+//			memberRepository.save(member);
+//		});
+//	}
+	
+//	@Test
+//	void testInsertMember() {
+//		MemberEntity member = MemberEntity.builder()
+//				.userId("user1")
+//				.userPw("1234")
+//				.userName("홍길동")
+//				.email("user1@naver.com")
+//				.build();
+//		
+//		memberRepository.save(member);
+//	}
 
 	
 //	@Test

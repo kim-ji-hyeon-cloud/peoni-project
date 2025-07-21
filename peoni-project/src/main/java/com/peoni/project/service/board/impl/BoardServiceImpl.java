@@ -31,6 +31,7 @@ public class BoardServiceImpl implements IBoardService{
 	
 	private final IBoardImageRepository boardImageRepository;
 	
+	
 	@Transactional
 	@Override
 	public Long register(BoardDTO boardDTO) {
@@ -66,17 +67,20 @@ public class BoardServiceImpl implements IBoardService{
 
 	@Override
 	public PageResultDTO<BoardDTO, Object[]> getList(PageRequestDTO requestDTO) {
-		var pageable = requestDTO.getPageable(Sort.by("boardId").descending());
-		
-		var result = boardRepository.getListPage(pageable);
-		
-		Function<Object[], BoardDTO> fn = (arr -> entitiesToDto(
-				(BoardEntity) arr[0], 
-				Arrays.asList((BoardImageEntity) arr[1]), 
-				(Long) arr[2]
-		));		
-				
-		return new PageResultDTO<>(result, fn);
+
+	    // 🔸 Pageable 추출 (정렬 기준 포함)
+	    var pageable = requestDTO.getPageable(Sort.by("boardId").descending());
+
+	    // 🔸 QueryDSL 기반 검색 with pageable
+	    var result = boardRepository.searchPageWithFilter(requestDTO, pageable);
+
+	    Function<Object[], BoardDTO> fn = (arr -> entitiesToDto(
+	            (BoardEntity) arr[0],
+	            Arrays.asList((BoardImageEntity) arr[1]),
+	            (Long) arr[2]
+	    ));
+
+	    return new PageResultDTO<>(result, fn);
 	}
 
 }

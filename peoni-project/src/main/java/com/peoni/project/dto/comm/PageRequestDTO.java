@@ -17,6 +17,7 @@ public class PageRequestDTO {
 	private int size;
 	private String keyword;
 	private String type;
+	private String boardType;
 	
 	public PageRequestDTO() {
 		this.page = 1;

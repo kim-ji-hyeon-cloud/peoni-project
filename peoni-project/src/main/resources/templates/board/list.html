@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>게시판 목록</title>
+</head>
+<body>
+
+<th:block th:replace="~{layout/basic :: setContent(~{::content})}">
+  <th:block th:fragment="content">
+
+    <div class="container my-4">
+      <h2>커뮤니티 게시판</h2>
+
+      <!-- 등록 버튼 -->
+      <div class="mb-3 d-flex justify-content-end">
+        <a th:href="@{/board/register}" class="btn btn-primary">글 작성</a>
+      </div>
+
+      <!-- 검색 필터 -->
+      <form th:action="@{/board/list}" method="get" id="searchForm">
+        <div class="d-flex flex-wrap mb-3 gap-2">
+
+          <!-- 검색어 -->
+          <input type="text" name="keyword" th:value="${param.keyword}" class="form-control w-auto" placeholder="제목 또는 내용 검색" />
+
+          <!-- 검색 유형 -->
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" name="typeArr" value="T"
+                   th:checked="${param.typeArr != null and #lists.contains(param.typeArr, 'T')}">
+            <label class="form-check-label">제목</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" name="typeArr" value="C"
+                   th:checked="${param.typeArr != null and #lists.contains(param.typeArr, 'C')}">
+            <label class="form-check-label">내용</label>
+          </div>
+		  
+		  <!-- 게시글 타입 필터 -->
+			<select class="form-select w-auto" name="boardType">
+			  <option value="">전체</option>
+			  <option value="NOTICE" th:selected="${param.boardType == 'NOTICE'}">공지사항</option>
+			  <option value="FREE" th:selected="${param.boardType == 'FREE'}">자유게시판</option>
+			  <option value="QNA" th:selected="${param.boardType == 'QNA'}">Q&A</option>
+			</select>
+		  
+          <button type="submit" class="btn btn-outline-secondary">검색</button>
+        </div>
+      </form>
+
+      <!-- 게시글 목록 -->
+      <table class="table table-hover text-center align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>번호</th>
+            <th>제목</th>
+            <th>작성자</th>
+            <th>작성일</th>
+            <th>댓글</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="dto : ${result.dtoList}">
+            <td th:text="${dto.boardId}">1</td>
+            <td class="text-start">
+              <a th:href="@{/board/read(boardId=${dto.boardId}, page=${result.page}, keyword=${param.keyword}, typeArr=${param.typeArr})}"
+                 th:text="${dto.title}">제목</a>
+            </td>
+            <td th:text="${dto.memberName}">작성자</td>
+            <td th:text="${#temporals.format(dto.regDate, 'yyyy-MM-dd')}">2025-07-21</td>
+            <td th:text="${dto.reviewCount}">0</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- 페이지네이션 -->
+      <nav th:if="${result.totalPage > 0}">
+        <ul class="pagination justify-content-center">
+          <li class="page-item" th:if="${result.prev}">
+            <a class="page-link"
+               th:href="@{/board/list(page=${result.start - 1}, keyword=${param.keyword}, typeArr=${param.typeArr}, boardType=${param.boardType})}">Prev</a>
+          </li>
+
+          <li class="page-item" th:each="i : ${#numbers.sequence(result.start, result.end)}"
+              th:classappend="${i == result.page} ? 'active'">
+            <a class="page-link"
+			   th:href="@{/board/list(page=${i}, keyword=${param.keyword}, typeArr=${param.typeArr}, boardType=${param.boardType})}"
+			   th:text="${i}">1</a>
+          </li>
+
+          <li class="page-item" th:if="${result.next}">
+            <a class="page-link"
+               th:href="@{/board/list(page=${result.end + 1}, keyword=${param.keyword}, typeArr=${param.typeArr}, boardType=${param.boardType})}">Next</a>
+          </li>
+        </ul>
+      </nav>
+
+    </div>
+
+  </th:block>
+</th:block>
+
+</body>
+</html>
