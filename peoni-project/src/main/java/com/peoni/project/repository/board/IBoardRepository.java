@@ -16,7 +16,7 @@ public interface IBoardRepository extends JpaRepository<BoardEntity, Long>{
 	@Query("SELECT b, bi, COUNT(br) "
 		 + "FROM BoardEntity b "
 		 + "LEFT JOIN BoardImageEntity bi ON bi.board = b "
-		 + "AND bi.imageId = (SELECT MAX(bi2.imageID) " 
+		 + "AND bi.imageId = (SELECT MAX(bi2.imageId) " 
 		 + "				  FROM BoardImageEntity bi2 "
 		 + "				  WHERE bi2.board = b) "
 		 + "LEFT JOIN BoardReviewEntity br ON br.board = b "
