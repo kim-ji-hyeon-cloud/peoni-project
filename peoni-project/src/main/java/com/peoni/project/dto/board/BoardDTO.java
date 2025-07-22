@@ -30,4 +30,5 @@ public class BoardDTO {
 	private List<BoardImageDTO> imageDtoList = new ArrayList<>();
 	
 	private int reviewCount;
+	
 }

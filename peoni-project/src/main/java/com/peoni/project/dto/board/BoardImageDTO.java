@@ -20,7 +20,8 @@ public class BoardImageDTO {
 	
 	public String getImageURL() {
 		try {
-			return URLEncoder.encode(path + "/" + uuid + "_" + imageName, "UTF-8");
+			String filename = URLEncoder.encode(uuid + "_" + imageName, "UTF-8").replace("+", "%20");
+			return "/upload/board/" + path + "/" + filename;
 		} catch (Exception e) {
 			return "";
 		}
@@ -28,7 +29,8 @@ public class BoardImageDTO {
 	
 	public String getThumbnailURL() {
 		try {
-			return URLEncoder.encode(path + "/s_" + uuid + "_" + imageName, "UTF-8");
+			String filename = URLEncoder.encode("s_" + uuid + "_" + imageName, "UTF-8").replace("+", "%20");
+			return "/upload/board/" + path + "/" + filename;
 		} catch (Exception e) {
 			return "";
 		}

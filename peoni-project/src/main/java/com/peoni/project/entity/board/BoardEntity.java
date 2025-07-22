@@ -50,6 +50,18 @@ public class BoardEntity extends BaseEntity{
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "mno", nullable = false)
 	private MemberEntity writer;
+	
+	public void changeTitle(String title) {
+	    this.title = title;
+	}
+
+	public void changeContent(String content) {
+	    this.content = content;
+	}
+
+	public void changeBoardType(String boardType) {
+	    this.boardType = boardType;
+	}
 }
 
 

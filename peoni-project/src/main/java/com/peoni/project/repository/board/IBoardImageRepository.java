@@ -12,4 +12,6 @@ public interface IBoardImageRepository extends JpaRepository<BoardImageEntity, L
 	
 	// 게시글에 등록된 모든 이미지 조회
 	List<BoardImageEntity> findByBoard(BoardEntity board);
+	
+	void deleteByBoard(BoardEntity board);
 }

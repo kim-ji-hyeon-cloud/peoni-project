@@ -60,19 +60,23 @@ public class IBoardSearchRepositoryImpl implements IBoardSearchRepository {
         }
 
         if (requestDTO.getKeyword() != null && !requestDTO.getKeyword().isEmpty()) {
-            BooleanBuilder keywordBuilder = new BooleanBuilder();
-            if (requestDTO.getType() != null) {
-                if (requestDTO.getType().contains("T")) {
+            String type = requestDTO.getType();  // 예: "T", "C", "TC"
+            if (type != null && !type.isBlank()) {
+                BooleanBuilder keywordBuilder = new BooleanBuilder();
+
+                if (type.contains("T")) {
                     keywordBuilder.or(board.title.contains(requestDTO.getKeyword()));
                 }
-                if (requestDTO.getType().contains("C")) {
+                if (type.contains("C")) {
                     keywordBuilder.or(board.content.contains(requestDTO.getKeyword()));
                 }
+
+                builder.and(keywordBuilder);
             }
-            builder.and(keywordBuilder);
         }
 
         query.where(builder);
+        query.orderBy(board.boardId.desc());
         query.offset(pageable.getOffset());
         query.limit(pageable.getPageSize());
 

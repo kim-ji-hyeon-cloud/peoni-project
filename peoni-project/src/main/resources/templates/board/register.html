@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>게시글 등록</title>
+  <link rel="stylesheet" th:href="@{/css/board.css}">
+</head>
+<body>
+<th:block th:replace="~{layout/basic :: setContent(~{::content})}">
+  <th:block th:fragment="content">
+
+    <div class="container my-4">
+      <h2>게시글 등록</h2>
+
+      <form th:action="@{/board/register}" method="post" enctype="multipart/form-data">
+        <!-- 제목 -->
+        <div class="mb-3">
+          <label for="title" class="form-label">제목</label>
+          <input type="text" class="form-control" id="title" name="title" required />
+        </div>
+
+        <!-- 내용 -->
+        <div class="mb-3">
+          <label for="content" class="form-label">내용</label>
+          <textarea class="form-control" id="content" name="content" rows="5" required></textarea>
+        </div>
+
+        <!-- 게시판 유형 -->
+        <div class="mb-3">
+          <label for="boardType" class="form-label">게시판 유형</label>
+          <select class="form-select" id="boardType" name="boardType" required>
+            <option value="NOTICE">공지사항</option>
+            <option value="FREE">자유게시판</option>
+            <option value="QNA">Q&A</option>
+          </select>
+        </div>
+
+        <!-- 파일 업로드 -->
+        <div class="mb-3">
+          <label class="form-label">이미지 첨부</label>
+          <input type="file" class="form-control" name="files" multiple />
+        </div>
+
+        <!-- 작성자 -->
+        <input type="hidden" name="mno" value="1" /> <!-- 테스트용 회원 ID -->
+
+        <!-- 등록 버튼 -->
+        <button type="submit" class="btn btn-primary">등록</button>
+      </form>
+    </div>
+
+  </th:block>
+</th:block>
+</body>
+</html>

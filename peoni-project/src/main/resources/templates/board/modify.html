@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>게시글 수정</title>
+  <link rel="stylesheet" th:href="@{/css/board.css}">
+</head>
+<body>
+<th:block th:replace="~{layout/basic :: setContent(~{::content})}">
+  <th:block th:fragment="content">
+
+    <div class="container my-4">
+      <h2>게시글 수정</h2>
+
+      <form th:action="@{/board/modify}" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="boardId" th:value="${dto.boardId}" />
+
+        <div class="mb-3">
+          <label class="form-label">제목</label>
+          <input type="text" class="form-control" name="title" th:value="${dto.title}" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">작성자</label>
+          <div class="form-control" readonly th:text="${dto.memberName}">작성자</div>
+        </div>
+
+		<!-- 게시글 타입 선택 -->
+		<div class="mb-3">
+		  <label class="form-label">게시판 종류</label>
+		  <select class="form-select" name="boardType" required>
+		    <option value="NOTICE" th:selected="${dto.boardType == 'NOTICE'}">공지사항</option>
+		    <option value="FREE" th:selected="${dto.boardType == 'FREE'}">자유게시판</option>
+		    <option value="QNA" th:selected="${dto.boardType == 'QNA'}">Q&A</option>
+		  </select>
+		</div>
+		
+        <div class="mb-3">
+          <label class="form-label">내용</label>
+          <textarea class="form-control" name="content" rows="6" required
+                    th:text="${dto.content}">내용</textarea>
+        </div>
+
+        <!-- 기존 이미지 출력 -->
+        <div class="mb-3" th:if="${dto.imageDtoList != null}">
+          <label class="form-label">기존 이미지</label>
+          <div class="d-flex gap-2 flex-wrap">
+            <div th:each="img : ${dto.imageDtoList}">
+              <img th:src="@{${img.getImageURL()}}" alt="기존 이미지" style="width: 150px; height: auto;"/>
+            </div>
+          </div>
+        </div>
+
+        <!-- 새 이미지 업로드 -->
+        <div class="mb-3">
+          <label class="form-label">새 이미지 업로드</label>
+          <input class="form-control" type="file" name="files" multiple>
+        </div>
+
+        <div class="mt-4 d-flex gap-2">
+          <a th:href="@{/board/read(boardId=${dto.boardId})}" class="btn btn-secondary">취소</a>
+          <button type="submit" class="btn btn-primary">수정 완료</button>
+        </div>
+
+      </form>
+    </div>
+
+  </th:block>
+</th:block>
+</body>
+</html>

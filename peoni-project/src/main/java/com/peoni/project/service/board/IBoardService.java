@@ -1,9 +1,12 @@
 package com.peoni.project.service.board;
 
 import java.util.HashMap;
+
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import com.peoni.project.dto.board.BoardDTO;
 import com.peoni.project.dto.board.BoardImageDTO;
@@ -20,19 +23,11 @@ public interface IBoardService {
 	BoardDTO getBoard(Long boardId);
 	PageResultDTO<BoardDTO, Object[]> getList(PageRequestDTO requestDTO);
 	
+	void modify(BoardDTO dto);
+	
+	void remove(Long boardId);
+	
 	default BoardDTO entitiesToDto(BoardEntity board, List<BoardImageEntity> imageList, Long reviewCount) {
-		
-		BoardDTO dto = BoardDTO.builder()
-									.boardId(board.getBoardId())
-									.title(board.getTitle())
-									.content(board.getContent())
-									.boardType(board.getBoardType())
-									.mno(board.getWriter().getMno())
-									.memberName(board.getWriter().getUserName())
-									.regDate(board.getRegDate())
-									.updateDate(board.getUpdateDate())
-									.reviewCount(reviewCount != null ? reviewCount.intValue() : 0)
-									.build();
 		
 		List<BoardImageDTO> imageDtoList = imageList.stream()
 				.filter(img -> img != null)
@@ -44,7 +39,21 @@ public interface IBoardService {
 						.build())
 				.collect(Collectors.toList());
 		
-		dto.setImageDtoList(imageDtoList);
+		
+		
+		BoardDTO dto = BoardDTO.builder()
+									.boardId(board.getBoardId())
+									.title(board.getTitle())
+									.content(board.getContent())
+									.boardType(board.getBoardType())
+									.mno(board.getWriter().getMno())
+									.memberName(board.getWriter().getUserName())
+									.regDate(board.getRegDate())
+									.updateDate(board.getUpdateDate())
+									.reviewCount(reviewCount != null ? reviewCount.intValue() : 0)
+									.imageDtoList(imageDtoList)
+									.build();
+		
 		
 		return dto;
 				

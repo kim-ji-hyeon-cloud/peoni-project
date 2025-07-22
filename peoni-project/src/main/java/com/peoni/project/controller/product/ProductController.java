@@ -93,10 +93,10 @@ public class ProductController {
 		// 이미지 저장
 		if (!imageFile.isEmpty()) {
 			String uuid = UUID.randomUUID().toString();
-			String fimeName = uuid + "_" + imageFile.getOriginalFilename();
-			File dest = new File(uploadPath, fimeName);
+			String fileName = uuid + "_" + imageFile.getOriginalFilename();
+			File dest = new File(uploadPath, fileName);
 			imageFile.transferTo(dest);
-			dto.setImage(fimeName);
+			dto.setImage(fileName);
 		}
 		
 		productService.register(dto);

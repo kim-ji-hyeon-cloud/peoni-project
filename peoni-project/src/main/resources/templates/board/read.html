@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>게시글 상세</title>
+  <link rel="stylesheet" th:href="@{/css/board.css}">
+</head>
+<body>
+<th:block th:replace="~{layout/basic :: setContent(~{::content})}">
+  <th:block th:fragment="content">
+
+    <div class="container my-4">
+      <h2>게시글 상세</h2>
+
+      <!-- 게시글 정보 -->
+      <div class="mb-3">
+        <label class="form-label">제목</label>
+        <div class="form-control" th:text="${dto.title}">제목입니다</div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">작성자</label>
+        <div class="form-control" th:text="${dto.memberName}">홍길동</div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">작성일</label>
+        <div class="form-control" th:text="${#temporals.format(dto.regDate, 'yyyy-MM-dd HH:mm')}">2025-07-21</div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">내용</label>
+        <div class="form-control" style="min-height: 150px;" th:text="${dto.content}">내용입니다</div>
+      </div>
+
+      <!-- 이미지 출력 -->
+      <div class="mb-3" th:if="${dto.imageDtoList != null}">
+        <label class="form-label">첨부 이미지</label>
+        <div class="d-flex gap-2 flex-wrap">
+          <div th:each="img : ${dto.imageDtoList}">
+            <img th:src="@{${img.getImageURL()}}" alt="이미지" style="width: 150px; height: auto;"/>
+          </div>
+        </div>
+      </div>
+
+      <!-- 댓글 수 -->
+      <div class="mb-3">
+        <label class="form-label">댓글 수</label>
+        <div class="form-control" th:text="${dto.reviewCount}">0</div>
+      </div>
+
+      <!-- 버튼 영역 -->
+      <div class="mt-4 d-flex gap-2">
+        <a th:href="@{/board/list}" class="btn btn-secondary">목록</a>
+        <a th:href="@{/board/modify(boardId=${dto.boardId})}" class="btn btn-warning">수정</a>
+        <form th:action="@{/board/remove}" method="post" style="display:inline;">
+          <input type="hidden" name="boardId" th:value="${dto.boardId}" />
+          <button type="submit" class="btn btn-danger" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
+        </form>
+      </div>
+
+    </div>
+
+  </th:block>
+</th:block>
+</body>
+</html>
