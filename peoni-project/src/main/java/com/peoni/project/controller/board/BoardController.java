@@ -23,6 +23,7 @@ import com.peoni.project.dto.board.BoardImageDTO;
 import com.peoni.project.dto.comm.PageRequestDTO;
 import com.peoni.project.service.board.IBoardService;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
