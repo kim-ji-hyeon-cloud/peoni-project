@@ -10,27 +10,9 @@
   <th:block th:fragment="content">
 
     <div class="container my-4">
-      <h2>커뮤니티 게시판</h2>
+      <h2>커뮤니티</h2>
 
-      <!-- 게시판 유형 탭 -->
-      <ul class="nav nav-tabs mb-3">
-        <li class="nav-item">
-          <a class="nav-link" th:classappend="${param.boardType == null or param.boardType == ''} ? 'active'" 
-             th:href="@{/board/list}">전체</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" th:classappend="${param.boardType == 'NOTICE'} ? 'active'" 
-             th:href="@{/board/list(boardType='NOTICE')}">공지사항</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" th:classappend="${param.boardType == 'FREE'} ? 'active'" 
-             th:href="@{/board/list(boardType='FREE')}">자유게시판</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" th:classappend="${param.boardType == 'QNA'} ? 'active'" 
-             th:href="@{/board/list(boardType='QNA')}">Q&A</a>
-        </li>
-      </ul>
+      
 
       <!-- 등록 버튼 -->
       <div class="mb-3 d-flex justify-content-end">
@@ -45,11 +27,11 @@
           <input type="text" name="keyword" th:value="${param.keyword}" class="form-control w-auto" placeholder="제목 또는 내용 검색" />
 
           <!-- 검색 유형 드롭다운 -->
-			<select class="form-select w-auto" name="type" style="min-width: 120px;">
-			  <option th:value="ALL" th:selected="${param.type == null or param.type == ''}">전체</option>
-			  <option th:value="T" th:selected="${param.type == 'T'}">제목</option>
-			  <option th:value="C" th:selected="${param.type == 'C'}">내용</option>
-			</select>
+          <select class="form-select w-auto" name="type" style="min-width: 120px;">
+            <option th:value="ALL" th:selected="${param.type == null or param.type == ''}">전체</option>
+            <option th:value="T" th:selected="${param.type == 'T'}">제목</option>
+            <option th:value="C" th:selected="${param.type == 'C'}">내용</option>
+          </select>
 
           <!-- 현재 boardType 유지 -->
           <input type="hidden" name="boardType" th:value="${param.boardType}" />
@@ -57,7 +39,31 @@
           <button type="submit" class="btn btn-outline-secondary">검색</button>
         </div>
       </form>
-
+	  
+	  <!-- 게시판 유형 탭 -->
+      <ul class="nav nav-tabs mb-3">
+        <li class="nav-item">
+          <a th:href="@{/board/list}"
+             th:class="'nav-link ' + (${param.boardType == null or #lists.isEmpty(param.boardType)} ? 'active' : '')">
+             전체</a>
+        </li>
+        <li class="nav-item">
+          <a th:href="@{/board/list(boardType='NOTICE')}"
+             th:class="'nav-link ' + (${param.boardType != null and param.boardType[0] == 'NOTICE'} ? 'active' : '')">
+             공지사항</a>
+        </li>
+        <li class="nav-item">
+          <a th:href="@{/board/list(boardType='FREE')}"
+             th:class="'nav-link ' + (${param.boardType != null and param.boardType[0] == 'FREE'} ? 'active' : '')">
+             자유게시판</a>
+        </li>
+        <li class="nav-item">
+          <a th:href="@{/board/list(boardType='QNA')}"
+             th:class="'nav-link ' + (${param.boardType != null and param.boardType[0] == 'QNA'} ? 'active' : '')">
+             Q&A</a>
+        </li>
+      </ul>
+	  
       <!-- 게시글 목록 -->
       <table class="table table-hover text-center align-middle">
         <thead class="table-light">
@@ -73,7 +79,7 @@
           <tr th:each="dto : ${result.dtoList}">
             <td th:text="${dto.boardId}">1</td>
             <td class="text-start">
-              <a th:href="@{/board/read(boardId=${dto.boardId}, page=${result.page}, keyword=${param.keyword}, typeArr=${param.typeArr}, boardType=${param.boardType})}"
+              <a th:href="@{/board/read(boardId=${dto.boardId}, page=${result.page}, keyword=${param.keyword}, type=${param.type}, boardType=${param.boardType})}"
                  th:text="${dto.title}">제목</a>
             </td>
             <td th:text="${dto.memberName}">작성자</td>
@@ -88,13 +94,13 @@
         <ul class="pagination justify-content-center">
           <li class="page-item" th:if="${result.prev}">
             <a class="page-link"
-               th:href="@{/board/list(page=${result.start - 1}, keyword=${param.keyword}, typeArr=${param.typeArr}, boardType=${param.boardType})}">Prev</a>
+               th:href="@{/board/list(page=${result.start - 1}, keyword=${param.keyword}, type=${param.type}, boardType=${param.boardType})}">Prev</a>
           </li>
 
           <li class="page-item" th:each="i : ${#numbers.sequence(result.start, result.end)}"
               th:classappend="${i == result.page} ? 'active'">
             <a class="page-link"
-               th:href="@{/board/list(page=${i}, keyword=${param.keyword}, typeArr=${param.typeArr}, boardType=${param.boardType})}"
+               th:href="@{/board/list(page=${i}, keyword=${param.keyword}, type=${param.type}, boardType=${param.boardType})}"
                th:text="${i}">1</a>
           </li>
 

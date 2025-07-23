@@ -61,7 +61,7 @@ public class BoardReviewController {
 	}
 	
 	// 댓글 수정
-	@PutMapping("/{boardId}/{reviewID}")
+	@PutMapping("/{boardId}/{reviewId}")
 	public ResponseEntity<Long> modify(@PathVariable("boardId") Long boardId,
 									   @PathVariable("reviewId") Long reviewId,
 									   @RequestBody ReviewDTO reviewDTO) {

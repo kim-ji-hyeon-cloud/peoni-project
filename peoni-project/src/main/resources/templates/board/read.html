@@ -10,7 +10,7 @@
 
     <div class="container my-4">
       <h2>게시글 상세</h2>
-
+	
       <!-- 게시글 정보 -->
       <div class="mb-3">
         <label class="form-label">제목</label>
@@ -46,13 +46,8 @@
 	
 		<!-- 댓글 영역 -->
 		<div class="mt-5">
-		  <h4>댓글</h4>
+		  <h4 id="reviewTitle">댓글</h4>
 		
-		<!-- 댓글 수 -->
-	      <div class="mb-3">
-	        <label class="form-label">댓글 수</label>
-	        <div class="form-control" th:text="${dto.reviewCount}">0</div>
-	      </div>
 		  <!-- 댓글 리스트 -->
 		  <ul class="list-group mb-3 reviewList">
 		    <!-- 댓글 항목은 JavaScript로 동적으로 채워짐 -->
@@ -96,6 +91,11 @@
   </th:block>
 </th:block>
 <script th:inline="javascript">
+const msg = /*[[${msg}]]*/ null;
+if (msg) {
+  alert(msg);
+}
+
   const boardId = [[${dto.boardId}]];
   const writerId = [[${session.login != null} ? ${session.login.mno} : 0]];
   const writerName = [[${session.login != null} ? '${session.login.userName}' : 'GUEST']];

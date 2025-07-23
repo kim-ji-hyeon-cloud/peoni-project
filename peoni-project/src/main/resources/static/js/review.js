@@ -12,19 +12,31 @@ document.addEventListener("DOMContentLoaded", function () {
       .then(res => res.json())
       .then(data => {
         reviewList.innerHTML = "";
+		
+		// 댓글 수 갱신
+		document.getElementById("reviewTitle").textContent = `댓글(${data.length})`;
+		
         data.forEach(review => {
           const li = document.createElement("li");
-          li.className = "list-group-item d-flex justify-content-between align-items-center";
+          li.className = "list-group-item d-flex justify-content-between align-items-start flex-column";
+
+          // 날짜 포맷
+          const regDate = new Date(review.regDate);
+          const formattedDate = `${regDate.getFullYear()}-${pad(regDate.getMonth() + 1)}-${pad(regDate.getDate())} ${pad(regDate.getHours())}:${pad(regDate.getMinutes())}`;
+
           li.innerHTML = `
-            <div>
-              <strong>${review.memberName}</strong><br/>
-              ${review.content}
+            <div class="w-100 mb-1">
+              <strong>${review.memberName}</strong>
+              <small class="text-muted"> (${formattedDate})</small>
             </div>
-            <div>
-              ${review.memberId === writerId ? `
-              <button class="btn btn-sm btn-outline-warning me-1 edit-btn" data-id="${review.reviewId}" data-content="${review.content}">수정</button>
-              <button class="btn btn-sm btn-outline-danger delete-btn" data-id="${review.reviewId}">삭제</button>` : ``}
-            </div>`;
+            <div class="w-100 mb-2">${review.content}</div>
+            ${review.mno === writerId ? `
+              <div class="w-100 text-end">
+                <button class="btn btn-sm btn-outline-warning me-1 edit-btn" data-id="${review.reviewId}" data-content="${review.content}">수정</button>
+                <button class="btn btn-sm btn-outline-danger delete-btn" data-id="${review.reviewId}">삭제</button>
+              </div>` : ``}
+          `;
+
           reviewList.appendChild(li);
         });
       });
@@ -44,18 +56,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // 저장 버튼
   document.getElementById("saveReviewBtn").addEventListener("click", () => {
-    const content = reviewContent.value;
-    if (!content) return;
+    const content = reviewContent.value.trim();
+    if (!content) {
+      alert("댓글 내용을 입력하세요.");
+      return;
+    }
 
     const payload = {
       content: content,
-      memberId: writerId,
+      mno: writerId,
       memberName: writerName
     };
 
-    const url = isEdit ?
-      `/board/reviews/${boardId}/${editingReviewId}` :
-      `/board/reviews/${boardId}`;
+    const url = isEdit
+      ? `/board/reviews/${boardId}/${editingReviewId}`
+      : `/board/reviews/${boardId}`;
 
     const method = isEdit ? "PUT" : "POST";
 
@@ -69,7 +84,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // 수정 클릭
+  // 수정/삭제 버튼
   reviewList.addEventListener("click", (e) => {
     if (e.target.classList.contains("edit-btn")) {
       isEdit = true;
@@ -88,6 +103,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // 초기 로드
+  function pad(n) {
+    return n < 10 ? "0" + n : n;
+  }
+
   loadReviews();
 });

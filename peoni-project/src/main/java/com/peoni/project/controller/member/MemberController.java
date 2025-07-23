@@ -97,6 +97,19 @@ public class MemberController {
 		boolean verified = memberService.verifyUserEmail(userId, email);
 		return verified ? "verified" : "fail";
 	}
+	
+	@GetMapping("/mypage")
+	public String myPage(HttpSession session, Model model) {
+		
+		MemberDTO loginMember = (MemberDTO) session.getAttribute("login");
+		
+		if (loginMember == null) {
+			return "redirect:/member/login";
+		}
+		
+		model.addAttribute("member", loginMember);
+		return "member/mypage";
+	}
 } 
 
 

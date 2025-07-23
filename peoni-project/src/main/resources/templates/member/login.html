@@ -223,6 +223,16 @@
         });
       });
     </script>
+    
+    <script th:inline="javascript">
+  /*<![CDATA[*/
+  const msg = /*[[${msg}]]*/ null;
+  if (msg) {
+    alert(msg);
+  }
+  /*]]>*/
+</script>
+    
   </div>
 </body>
 </html>
