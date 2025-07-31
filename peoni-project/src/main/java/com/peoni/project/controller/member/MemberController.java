@@ -3,6 +3,7 @@ package com.peoni.project.controller.member;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.peoni.project.config.CustomUserDetails;
 import com.peoni.project.dto.member.MemberDTO;
 import com.peoni.project.service.member.IMemberService;
 
@@ -32,26 +34,26 @@ public class MemberController {
 		return "member/login";
 	}
 	
-	@PostMapping("/loginPost")
-	public String login(@ModelAttribute MemberDTO mDto, HttpSession session, Model model) {
-		log.info("로그인 요청 {}", mDto);
-		
-		MemberDTO loginMember = memberService.login(mDto.getUserId(), mDto.getUserPw());
-		
-		if (loginMember == null) {
-			return "redirect:/member/login";
-		}
-		
-		session.setAttribute("login", loginMember);
-		model.addAttribute("memInfo", loginMember);
-		return "redirect:/main";
-	}
+//	@PostMapping("/loginPost")
+//	public String login(@ModelAttribute MemberDTO mDto, HttpSession session, Model model) {
+//		log.info("로그인 요청 {}", mDto);
+//		
+//		MemberDTO loginMember = memberService.login(mDto.getUserId(), mDto.getUserPw());
+//		
+//		if (loginMember == null) {
+//			return "redirect:/member/login";
+//		}
+//		
+//		session.setAttribute("login", loginMember);
+//		model.addAttribute("memInfo", loginMember);
+//		return "redirect:/main";
+//	}
 	
-	@GetMapping("/logout")
-	public String logout(HttpSession session) {
-		session.invalidate();
-		return "redirect:/main";
-	}
+//	@GetMapping("/logout")
+//	public String logout(HttpSession session) {
+//		session.invalidate();
+//		return "redirect:/main";
+//	}
 	
 	@GetMapping("/register")
 	public String registerForm() {
@@ -99,15 +101,13 @@ public class MemberController {
 	}
 	
 	@GetMapping("/mypage")
-	public String myPage(HttpSession session, Model model) {
+	public String myPage(@AuthenticationPrincipal CustomUserDetails user, Model model) {
 		
-		MemberDTO loginMember = (MemberDTO) session.getAttribute("login");
-		
-		if (loginMember == null) {
+		if (user == null) {
 			return "redirect:/member/login";
 		}
 		
-		model.addAttribute("member", loginMember);
+		model.addAttribute("member", user.getMember());
 		return "member/mypage";
 	}
 } 

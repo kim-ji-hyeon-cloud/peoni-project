@@ -30,7 +30,6 @@ public interface IMemberService {
 											.email(dto.getEmail())
 											.emailVerified(dto.getEmailVerified())
 											.termsAgreed(dto.getTermsAgreed())
-											.role(dto.getRole())
 											.build();
 		return entity;
 	}
@@ -44,7 +43,6 @@ public interface IMemberService {
 									.email(entity.getEmail())
 									.emailVerified(entity.getEmailVerified())
 									.termsAgreed(entity.getTermsAgreed())
-									.role(entity.getRole())
 									.regDate(entity.getRegDate())
 									.updateDate(entity.getUpdateDate())
 									.build();

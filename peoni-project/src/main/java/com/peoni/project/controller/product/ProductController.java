@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,11 +20,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.peoni.project.config.CustomUserDetails;
 import com.peoni.project.dto.comm.ProductSearchDTO;
 import com.peoni.project.dto.member.MemberDTO;
 import com.peoni.project.dto.product.CategoryDTO;
 import com.peoni.project.dto.product.ProductDTO;
 import com.peoni.project.dto.store.StoreDTO;
+import com.peoni.project.entity.member.MemberEntity;
 import com.peoni.project.service.product.ICategoryService;
 import com.peoni.project.service.product.IProductService;
 import com.peoni.project.service.store.IStoreService;
@@ -80,14 +83,15 @@ public class ProductController {
 	@PostMapping("/register")
 	public String register(@ModelAttribute ProductDTO dto,
 						   @RequestParam("imageFile") MultipartFile imageFile,
-						   HttpSession session,
+						   @AuthenticationPrincipal CustomUserDetails customUser,
 						   RedirectAttributes rttr) throws IOException {
 		
 		// 로그인 세션 체크
-		MemberDTO member = (MemberDTO) session.getAttribute("login");
-		if (member == null) {
+		if (customUser == null) {
 			return "redirect:/member/login";
 		}
+		
+		MemberEntity member = customUser.getMember();
 		dto.setMno(member.getMno());
 		
 		// 이미지 저장
@@ -106,22 +110,23 @@ public class ProductController {
 	
 	// 상세조회
 	@GetMapping("/read")
-	public String read(@RequestParam("productId") Long productId, Model model, HttpSession session) {
+	public String read(@RequestParam("productId") Long productId, Model model) {
 		
 		ProductDTO dto = productService.getProduct(productId);
-		MemberDTO login = (MemberDTO) session.getAttribute("login");
 		
 		model.addAttribute("product", dto);
-		model.addAttribute("login", login);
 		return "product/read";
 	}
 	
 	// 수정 페이지 이동
 	@GetMapping("/modify")
-	public String modifyForm(@RequestParam("productId") Long productId, Model model, HttpSession session) {
+	public String modifyForm(@RequestParam("productId") Long productId,
+							 Model model,
+							 @AuthenticationPrincipal CustomUserDetails customUser) {
 		
-		MemberDTO member = (MemberDTO) session.getAttribute("login");
-		if (member == null) return "redirect:/member/login";
+		if (customUser == null) {
+			return "redirect:/member/login";
+		}
 		
 		ProductDTO dto = productService.getProduct(productId);
 		
@@ -161,10 +166,13 @@ public class ProductController {
 	
 	// 상품 삭제
 	@PostMapping("/remove")
-	public String remove(@RequestParam("productId") Long productId, HttpSession session, RedirectAttributes rttr) {
+	public String remove(@RequestParam("productId") Long productId, 
+						 @AuthenticationPrincipal CustomUserDetails customUser, 
+						 RedirectAttributes rttr) {
 		
-		MemberDTO member = (MemberDTO) session.getAttribute("login");
-		if (member == null) return "redirect:/member/login";
+		if (customUser == null) {
+			return "redirect:/member/login";
+		}
 		
 		productService.delete(productId);
 		rttr.addFlashAttribute("result", "삭제 완료");

@@ -2,11 +2,13 @@ package com.peoni.project.service.member.impl;
 
 import java.util.Optional;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.peoni.project.dto.member.MemberDTO;
 import com.peoni.project.entity.member.MemberEntity;
+import com.peoni.project.entity.member.MemberRole;
 import com.peoni.project.repository.member.IMemberRepository;
 import com.peoni.project.service.member.IMemberService;
 
@@ -17,11 +19,14 @@ import lombok.RequiredArgsConstructor;
 public class MemberServiceImpl implements IMemberService {
 
 	private final IMemberRepository memberRepository;
+	private final PasswordEncoder passwordEncoder;
 	
 	@Override
 	@Transactional
 	public Long register(MemberDTO memberDTO) {
 		MemberEntity entity = dtoToEntity(memberDTO);
+		entity.setUserPw(passwordEncoder.encode(entity.getUserPw()));
+		entity.addMemberRole(MemberRole.USER);
 		return memberRepository.save(entity).getMno();
 	}
 

@@ -9,8 +9,10 @@ import java.util.stream.IntStream;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.peoni.project.entity.member.MemberEntity;
+import com.peoni.project.entity.member.MemberRole;
 import com.peoni.project.repository.member.IMemberRepository;
 
 import lombok.extern.log4j.Log4j2;
@@ -21,6 +23,9 @@ class MemberRepositoryTest {
 	
 	@Autowired
 	private IMemberRepository memberRepository;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	
 //	@Test
 //	void testInsertMembers() {
@@ -83,6 +88,25 @@ class MemberRepositoryTest {
 //			log.info("해당 회원이 존재하지 않습니다");
 //		}
 //	}
+	
+	@Test
+	void inserAdminTest() {
+		MemberEntity admin = MemberEntity.builder()
+				.userId("admin1")
+				.userPw(passwordEncoder.encode("admin123"))
+				.userName("관리자1")
+				.email("admin!@naver.com")
+				.emailVerified('Y')
+				.termsAgreed('Y')
+				.build();
+		
+		admin.addMemberRole(MemberRole.USER);
+		admin.addMemberRole(MemberRole.MANAGER);
+		admin.addMemberRole(MemberRole.ADMIN);
+		
+		memberRepository.save(admin);
+		
+	}
 }
 
 

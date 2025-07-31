@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head></head>
 <body>
 
@@ -8,8 +9,9 @@
 
     <div class="container my-4">
       <h2>전체 상품</h2>
-
-      <div class="mb-3 d-flex justify-content-end">
+	
+	<!-- 관리자만 등록 버튼 보이게 -->
+      <div class="mb-3 d-flex justify-content-end" sec:authorize="hasRole('ADMIN')">
         <a th:href="@{/product/register}" class="btn btn-success">상품 등록</a>
       </div>
 

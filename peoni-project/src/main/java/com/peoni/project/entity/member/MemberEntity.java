@@ -1,9 +1,14 @@
 package com.peoni.project.entity.member;
 
+import java.util.Set;
+import java.util.HashSet;
+
 import com.peoni.project.entity.comm.BaseEntity;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -57,8 +62,13 @@ public class MemberEntity extends BaseEntity{
 	@Column(name = "terms_agreed", nullable = false, length = 1, columnDefinition = "CHAR(1) DEFAULT 'N'")
 	private char termsAgreed = 'N';
 	
-	@Column(name = "role", nullable = false, columnDefinition = "NUMBER(4) DEFAULT 0")
-	private int role = 0;
+	@ElementCollection(fetch = FetchType.EAGER)
+	@Builder.Default
+	private Set<MemberRole> roleSet = new HashSet<>();
+	
+	public void addMemberRole(MemberRole memberRole) {
+		roleSet.add(memberRole);
+	}
 }
 
 

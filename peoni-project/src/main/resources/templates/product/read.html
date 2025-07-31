@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <meta charset="UTF-8">
   <title>상품 상세</title>
@@ -57,7 +58,7 @@
       </div>
 
       <div class="d-flex gap-2 mt-2"
-      	   th:if="${login != null and login.mno == product.mno}">
+      	   sec:authorize="hasRole('ADMIN')">
       	   
         <form th:action="@{/product/modify}" method="get">
           <input type="hidden" name="productId" th:value="${product.productId}" />

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.peoni.project.config.CustomUserDetails;
 import com.peoni.project.dto.board.BoardDTO;
 import com.peoni.project.dto.board.BoardImageDTO;
 import com.peoni.project.dto.comm.PageRequestDTO;
@@ -41,8 +43,8 @@ public class BoardController {
 	
 	// 게시글 등록 폼
 	@GetMapping("/register")
-	public String registerForm(HttpSession session, RedirectAttributes rttr) {
-	    if (session.getAttribute("login") == null) {
+	public String registerForm(@AuthenticationPrincipal CustomUserDetails customUser, RedirectAttributes rttr) {
+	    if (customUser == null) {
 	        rttr.addFlashAttribute("msg", "로그인 후 이용 가능합니다.");
 	        return "redirect:/member/login";
 	    }
@@ -54,16 +56,16 @@ public class BoardController {
 	public String register(BoardDTO boardDTO, 
 						   @RequestParam("files") MultipartFile[] files, 
 						   RedirectAttributes rttr,
-						   HttpSession session) {
+						   @AuthenticationPrincipal CustomUserDetails customUser) {
 		
 		// 로그인 확인
-	    MemberDTO loginMember = (MemberDTO) session.getAttribute("login");
-	    if (loginMember == null) {
+	    if (customUser == null) {
 	        rttr.addFlashAttribute("msg", "로그인 후 작성 가능합니다.");
 	        return "redirect:/member/login";
 	    }
 		
 	    // 로그인한 회원의 mno 설정
+	    MemberDTO loginMember = customUser.toDTO();
 	    boardDTO.setMno(loginMember.getMno());
 		
 		List<BoardImageDTO> imageList = new ArrayList<>();
@@ -126,16 +128,16 @@ public class BoardController {
 	
 	@GetMapping("/modify")
 	public String modifyForm(@RequestParam("boardId") Long boardId, 
-							 HttpSession session,
+							 @AuthenticationPrincipal CustomUserDetails customUser,
 							 Model model,
 							 RedirectAttributes rttr) {
 		
-		MemberDTO loginMember = (MemberDTO) session.getAttribute("login");
-	    if (loginMember == null) {
+	    if (customUser == null) {
 	        rttr.addFlashAttribute("msg", "로그인 후 작성 가능합니다.");
 	        return "redirect:/member/login";
 	    }
 	    
+	    MemberDTO loginMember = customUser.toDTO();
 		BoardDTO boardDTO = boardService.getBoard(boardId);
 		
 		if (!boardDTO.getMno().equals(loginMember.getMno())) {
@@ -198,12 +200,25 @@ public class BoardController {
 	}
 	
 	@PostMapping("/remove")
-	public String remove(@RequestParam("boardId") Long boardId, RedirectAttributes rttr) {
-		
-		boardService.remove(boardId);
-		rttr.addFlashAttribute("msg", "게시글이 삭제되었습니다");
-		
-		return "redirect:/board/list";
+	public String remove(@RequestParam("boardId") Long boardId,
+	                     @AuthenticationPrincipal CustomUserDetails loginUser,
+	                     RedirectAttributes rttr) {
+
+	    if (loginUser == null) {
+	        rttr.addFlashAttribute("msg", "로그인 후 이용 가능합니다.");
+	        return "redirect:/member/login";
+	    }
+
+	    BoardDTO boardDTO = boardService.getBoard(boardId);
+	    if (!boardDTO.getMno().equals(loginUser.getMember().getMno())) {
+	        rttr.addFlashAttribute("msg", "본인만 삭제할 수 있습니다.");
+	        return "redirect:/board/read?boardId=" + boardId;
+	    }
+
+	    boardService.remove(boardId);
+	    rttr.addFlashAttribute("msg", "게시글이 삭제되었습니다");
+
+	    return "redirect:/board/list";
 	}
 }
 

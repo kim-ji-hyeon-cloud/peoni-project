@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
-public class MainCotroller {
+public class MainController {
 	
 	private final IProductService productService;
 
