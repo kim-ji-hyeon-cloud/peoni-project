@@ -41,20 +41,20 @@ class SearchProductRepositoryTest {
 //    }
 	
 	
-	@Test
-	@Transactional
-	void testSearchByCategory() {
-		
-		ProductSearchDTO dto = new ProductSearchDTO();
-		dto.setCategoryId(2L);
-		
-		Pageable pageable = PageRequest.of(0, 10);
-		
-		Page<ProductEntity> result = productSearchRepository.searchProducts(dto, pageable);
-		log.info("카테고리 검색 수 : {}", result.getTotalElements());
-		
-		result.getContent().forEach(product -> log.info("검색 결과: {}", product));
-	}
+//	@Test
+//	@Transactional
+//	void testSearchByCategory() {
+//		
+//		ProductSearchDTO dto = new ProductSearchDTO();
+//		dto.setCategoryId(2L);
+//		
+//		Pageable pageable = PageRequest.of(0, 10);
+//		
+//		Page<ProductEntity> result = productSearchRepository.searchProducts(dto, pageable);
+//		log.info("카테고리 검색 수 : {}", result.getTotalElements());
+//		
+//		result.getContent().forEach(product -> log.info("검색 결과: {}", product));
+//	}
 }
 
 

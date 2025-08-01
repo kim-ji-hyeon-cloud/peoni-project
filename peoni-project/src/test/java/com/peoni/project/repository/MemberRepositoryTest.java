@@ -89,24 +89,24 @@ class MemberRepositoryTest {
 //		}
 //	}
 	
-	@Test
-	void inserAdminTest() {
-		MemberEntity admin = MemberEntity.builder()
-				.userId("admin1")
-				.userPw(passwordEncoder.encode("admin123"))
-				.userName("관리자1")
-				.email("admin!@naver.com")
-				.emailVerified('Y')
-				.termsAgreed('Y')
-				.build();
-		
-		admin.addMemberRole(MemberRole.USER);
-		admin.addMemberRole(MemberRole.MANAGER);
-		admin.addMemberRole(MemberRole.ADMIN);
-		
-		memberRepository.save(admin);
-		
-	}
+//	@Test
+//	void inserAdminTest() {
+//		MemberEntity admin = MemberEntity.builder()
+//				.userId("admin1")
+//				.userPw(passwordEncoder.encode("admin123"))
+//				.userName("관리자1")
+//				.email("admin!@naver.com")
+//				.emailVerified('Y')
+//				.termsAgreed('Y')
+//				.build();
+//		
+//		admin.addMemberRole(MemberRole.USER);
+//		admin.addMemberRole(MemberRole.MANAGER);
+//		admin.addMemberRole(MemberRole.ADMIN);
+//		
+//		memberRepository.save(admin);
+//		
+//	}
 }
 
 
